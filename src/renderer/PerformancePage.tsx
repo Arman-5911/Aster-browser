@@ -1,0 +1,11 @@
+import {useState} from 'react';
+import type {Snapshot} from '../shared/types';
+import {send} from './store';
+export function PerformancePage({state}:{state:Snapshot}){
+ const [message,setMessage]=useState('');const metrics=state.performance;
+ return <div className="learning"><h1>A lighter browser.</h1><p className="page-subtitle">Manage background tabs and check browser resource use.</p>
+ <section className="learning-card"><h2>Live resource use</h2><p>{metrics.memoryMB} MB working set / {metrics.processes} processes / {metrics.cpu}% CPU</p><p>All Aster windows and extension processes combined. Shared memory can be counted more than once; this is not a per-tab measurement. Refreshes every 10 seconds while open.</p><p>{state.tabs.filter(t=>t.sleeping).length} sleeping tabs in this workspace.</p></section>
+ <section className="learning-card"><h2>Memory Saver</h2><label><input type="checkbox" checked={state.settings.autoSleep} onChange={e=>void send({type:'settings-patch',value:{autoSleep:e.target.checked}})}/> Automatically sleep idle background tabs</label><p><label>Idle time <select value={state.settings.sleepMinutes} onChange={e=>void send({type:'settings-patch',value:{sleepMinutes:Number(e.target.value)}})}>{[5,15,30,60,120].map(n=><option key={n} value={n}>{n} minutes</option>)}</select></label></p><p>Sleeping releases the page and reloads its URL when selected. Page state, scroll position and navigation history are not restored. Active, pinned, private, split-view, audio, video, capture and form pages are protected. Keep important pages pinned.</p></section>
+ <section className="learning-card"><h2>Workspace tabs</h2>{state.tabs.filter(t=>/^https?:/.test(t.url)).map(t=><div key={t.id} className="learning-actions"><span>{t.title} / {t.sleeping?'Sleeping':t.loading?'Loading':'Awake'}</span><button disabled={!!t.sleeping||t.loading||t.pinned||t.floating||state.privacy.temporary} onClick={async()=>{const result=await send({type:'sleep-tab',id:t.id});setMessage(result?'Tab is sleeping.':'This tab is protected or busy.');}}>Sleep {t.title}</button><button onClick={()=>void send({type:'select-tab',id:t.id})}>{t.sleeping?'Wake':'Open'} {t.title}</button></div>)}<p role="status">{message}</p></section>
+ </div>;
+}

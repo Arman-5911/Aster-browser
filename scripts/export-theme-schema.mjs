@@ -1,0 +1,10 @@
+import {build} from 'esbuild';
+import {mkdir,writeFile} from 'node:fs/promises';
+const result=await build({stdin:{contents:"export {themePackageSchema} from './src/shared/studio';",resolveDir:process.cwd()},bundle:true,platform:'node',format:'esm',write:false});
+const {themePackageSchema}=await import('data:text/javascript;base64,'+Buffer.from(result.outputFiles[0].text).toString('base64'));
+const schema=themePackageSchema.toJSONSchema();
+schema.title='Aster Theme Package v1';
+schema.properties.studio.properties.toolbar.uniqueItems=true;
+schema.properties.studio.properties.toolbar.allOf=[{contains:{const:'address'}},{contains:{const:'menu'}}];
+await mkdir('schemas',{recursive:true});
+await writeFile('schemas/theme.schema.json',JSON.stringify(schema,null,2)+'\n');

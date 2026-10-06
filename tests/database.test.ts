@@ -1,0 +1,20 @@
+import {describe,it,expect} from 'vitest';
+import {mkdtempSync,rmSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import path from 'node:path';
+import {Repository} from '../src/main/database';
+import {DatabaseSync} from 'node:sqlite';
+import {emptySplit,type WindowSession} from '../src/shared/workspace';
+describe('SQLite repository',()=>{
+  it('migrates real Phase 1 data without losing history or bookmarks',()=>{
+    const directory=mkdtempSync(path.join(tmpdir(),'aster-migration-test-'));const file=path.join(directory,'test.sqlite');const old=new DatabaseSync(file);
+    old.exec(`CREATE TABLE schema_migrations(version INTEGER PRIMARY KEY,applied_at INTEGER);INSERT INTO schema_migrations VALUES(1,0);CREATE TABLE settings(key TEXT PRIMARY KEY,value TEXT);CREATE TABLE bookmarks(id TEXT PRIMARY KEY,title TEXT,url TEXT UNIQUE,created_at INTEGER);INSERT INTO bookmarks VALUES('b1','Legacy','https://example.com/',1);CREATE TABLE history(id TEXT PRIMARY KEY,title TEXT,url TEXT,visited_at INTEGER);INSERT INTO history VALUES('h1','Legacy visit','https://example.com/',1);CREATE TABLE downloads(id TEXT PRIMARY KEY,filename TEXT,url TEXT,path TEXT,received INTEGER,total INTEGER,state TEXT,started_at INTEGER);`);old.close();
+    const repo=new Repository(file);try{expect(repo.bookmarks()[0].title).toBe('Legacy');expect(repo.history()[0].title).toBe('Legacy visit');repo.bookmark('Study','https://example.com/','study');expect(repo.bookmarks('study')).toHaveLength(1);expect(repo.bookmarks()).toHaveLength(1);repo.clearHistory('study');expect(repo.history()).toHaveLength(1);}finally{repo.close();rmSync(directory,{recursive:true,force:true});}
+  });
+  it('stores validated named sessions and crash checkpoints across restart',()=>{const directory=mkdtempSync(path.join(tmpdir(),'aster-session-db-'));const file=path.join(directory,'test.sqlite');let repo=new Repository(file);const saved:WindowSession={version:2,id:'window',activeWorkspaceId:'default',workspaces:[{id:'default',name:'Personal',color:'forest',theme:'inherit',recordHistory:true,activeId:'tab',tabs:[{id:'tab',url:'aster://newtab',title:'New tab',muted:false,pinned:false,zoom:1,groupId:null}],groups:[],split:emptySplit()}]};try{repo.saveSession('Research',saved);repo.saveCheckpoint({windows:[saved],clean:false});repo.close();repo=new Repository(file);expect(repo.checkpoint()?.clean).toBe(false);const id=repo.sessions()[0].id;expect(repo.loadSession(id)).toEqual(saved);repo.deleteSession(id);expect(repo.sessions()).toHaveLength(0);repo.clearCheckpoint();expect(repo.checkpoint()).toBeUndefined();}finally{repo.close();rmSync(directory,{recursive:true,force:true});}});
+  it('migrates, persists preferences and deduplicates bookmarks without SQL injection',()=>{
+    const directory=mkdtempSync(path.join(tmpdir(),'aster-db-test-'));const file=path.join(directory,'test.sqlite');let repo=new Repository(file);
+    try{repo.setSettings({...repo.settings(),theme:'dark'});repo.bookmark("Quote ' ; DROP TABLE history; --",'https://example.com/');repo.bookmark('Updated title','https://example.com/');repo.visit('First visit','https://example.com/');expect(repo.bookmarks()).toHaveLength(1);expect(repo.bookmarks()[0].title).toBe('Updated title');expect(repo.history('First')).toHaveLength(1);repo.close();repo=new Repository(file);expect(repo.settings().theme).toBe('dark');expect(repo.history()).toHaveLength(1);repo.clearHistory();expect(repo.history()).toEqual([]);repo.removeBookmark(repo.bookmarks()[0].id);expect(repo.bookmarks()).toEqual([]);}finally{repo.close();rmSync(directory,{recursive:true,force:true});}
+  });
+  it('recovers unfinished download records after restart',()=>{const directory=mkdtempSync(path.join(tmpdir(),'aster-download-test-'));const file=path.join(directory,'test.sqlite');let repo=new Repository(file);try{repo.saveDownload({id:'1',filename:'test.txt',url:'https://example.com/test.txt',path:'test.txt',received:3,total:10,state:'progressing',started_at:Date.now()});repo.close();repo=new Repository(file);expect(repo.downloads()[0].state).toBe('interrupted');}finally{repo.close();rmSync(directory,{recursive:true,force:true});}});
+});

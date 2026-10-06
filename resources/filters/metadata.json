@@ -1,0 +1,17 @@
+{
+  "retrievedAt": "2026-09-09T12:23:54.923Z",
+  "lists": [
+    {
+      "name": "easyprivacy",
+      "url": "https://easylist.to/easylist/easyprivacy.txt",
+      "sha256": "2e2fd7ad3f3fddd0b1d3876bf1afc2d975139728707597cb7ddf3d732feb7471",
+      "bytes": 1501458
+    },
+    {
+      "name": "easylist",
+      "url": "https://easylist.to/easylist/easylist.txt",
+      "sha256": "e8c986e099d6a10506d4caae4666457bcc4f10d501afbc64d1709a2376094a8f",
+      "bytes": 2084548
+    }
+  ]
+}

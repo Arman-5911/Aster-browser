@@ -1,0 +1,12 @@
+import { _electron as electron } from '@playwright/test';
+import {mkdtemp,writeFile,readFile,mkdir,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';import path from 'node:path';
+const temp=await mkdtemp(path.join(tmpdir(),'aster-icon-build-'));
+const helper=path.join(temp,'render.cjs');
+await writeFile(helper,`const {app,BrowserWindow}=require('electron');app.setPath('userData',${JSON.stringify(path.join(temp,'profile'))});app.whenReady().then(()=>{const win=new BrowserWindow({show:false,webPreferences:{sandbox:true,contextIsolation:true,nodeIntegration:false}});win.loadURL('about:blank');});app.on('window-all-closed',()=>app.quit());`);
+const env=Object.fromEntries(Object.entries(process.env).filter(([k,v])=>v!==undefined&&k!=='ELECTRON_RUN_AS_NODE'));
+let app;
+try{app=await electron.launch({args:[helper],env});const page=await app.firstWindow();const svg=(await readFile('resources/icons/aster-master.png')).toString('base64');const images=await page.evaluate(async svg=>{const image=new Image();image.src='data:image/png;base64,'+svg;await image.decode();return [16,24,32,48,64,128,256,512].map(size=>{const canvas=document.createElement('canvas');canvas.width=canvas.height=size;const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(image,0,0,size,size);return {size,png:canvas.toDataURL('image/png').split(',')[1]};});},svg);
+await mkdir('resources/icons',{recursive:true});await mkdir('public',{recursive:true});await writeFile('public/aster-icon.png',Buffer.from(images.at(-1).png,'base64'));await writeFile('resources/icons/aster.png',Buffer.from(images.at(-1).png,'base64'));
+const entries=images.slice(0,-1).map(i=>({...i,data:Buffer.from(i.png,'base64')}));const header=Buffer.alloc(6+16*entries.length);header.writeUInt16LE(1,2);header.writeUInt16LE(entries.length,4);let offset=header.length;entries.forEach((i,n)=>{const at=6+n*16;header[at]=header[at+1]=i.size===256?0:i.size;header.writeUInt16LE(1,at+4);header.writeUInt16LE(32,at+6);header.writeUInt32LE(i.data.length,at+8);header.writeUInt32LE(offset,at+12);offset+=i.data.length;});await writeFile('resources/icons/aster.ico',Buffer.concat([header,...entries.map(i=>i.data)]));console.log('Generated Aster PNG and seven-size Windows ICO.');
+}finally{if(app)await app.close();const resolved=path.resolve(temp);if(!resolved.startsWith(path.resolve(tmpdir())+path.sep))throw Error('Unexpected temporary directory');await rm(resolved,{recursive:true,force:true,maxRetries:5,retryDelay:200});}

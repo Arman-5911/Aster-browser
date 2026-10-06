@@ -1,0 +1,11 @@
+import {StartupReveal} from './components/StartupReveal';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
+import './styles.css';
+import './features/appearance/studio.css';
+import './features/appearance/advanced.css';
+import './features/appearance/modern.css';
+import './features/appearance/icon-feedback.css';
+import './features/appearance/liquid-glass.css';
+createRoot(document.getElementById('root')!).render(<React.StrictMode><App/><StartupReveal/></React.StrictMode>);

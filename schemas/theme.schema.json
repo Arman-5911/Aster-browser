@@ -1,0 +1,990 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "visual": {
+      "type": "object",
+      "properties": {
+        "theme": {
+          "type": "string",
+          "enum": [
+            "light",
+            "dark",
+            "system"
+          ]
+        },
+        "accent": {
+          "type": "string",
+          "enum": [
+            "forest",
+            "slate",
+            "clay"
+          ]
+        },
+        "density": {
+          "type": "string",
+          "enum": [
+            "comfortable",
+            "compact"
+          ]
+        },
+        "tabStyle": {
+          "type": "string",
+          "enum": [
+            "classic",
+            "soft",
+            "pill"
+          ]
+        },
+        "tabWidth": {
+          "type": "integer",
+          "minimum": 140,
+          "maximum": 280
+        },
+        "tabFontSize": {
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 15
+        },
+        "tabColor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "tabClose": {
+          "type": "string",
+          "enum": [
+            "always",
+            "hover"
+          ]
+        },
+        "motion": {
+          "type": "string",
+          "enum": [
+            "off",
+            "calm",
+            "expressive"
+          ]
+        },
+        "startBackground": {
+          "type": "string",
+          "enum": [
+            "plain",
+            "sage",
+            "sand",
+            "aurora"
+          ]
+        },
+        "wallpaperShade": {
+          "type": "integer",
+          "minimum": 50,
+          "maximum": 95
+        },
+        "wallpaperBlur": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 50
+        },
+        "tabLayout": {
+          "type": "string",
+          "enum": [
+            "horizontal",
+            "vertical"
+          ]
+        },
+        "sidebarVisible": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "theme",
+        "accent",
+        "density",
+        "tabStyle",
+        "tabWidth",
+        "tabFontSize",
+        "tabColor",
+        "tabClose",
+        "motion",
+        "startBackground",
+        "wallpaperShade",
+        "wallpaperBlur",
+        "tabLayout",
+        "sidebarVisible"
+      ],
+      "additionalProperties": false
+    },
+    "studio": {
+      "type": "object",
+      "properties": {
+        "wallpaperMode": {
+          "default": "static",
+          "type": "string",
+          "enum": [
+            "static",
+            "image",
+            "animated",
+            "collection",
+            "time",
+            "video"
+          ]
+        },
+        "wallpaperSlot": {
+          "default": 0,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 7
+        },
+        "rotationMinutes": {
+          "default": 15,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 120
+        },
+        "dayDim": {
+          "default": 35,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80
+        },
+        "nightDim": {
+          "default": 60,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80
+        },
+        "scheduledDim": {
+          "default": false,
+          "type": "boolean"
+        },
+        "adaptiveColors": {
+          "default": false,
+          "type": "boolean"
+        },
+        "adaptiveTime": {
+          "default": false,
+          "type": "boolean"
+        },
+        "autoPerformance": {
+          "default": true,
+          "type": "boolean"
+        },
+        "parallax": {
+          "default": 0,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "noise": {
+          "default": "none",
+          "type": "string",
+          "enum": [
+            "none",
+            "soft",
+            "medium"
+          ]
+        },
+        "refraction": {
+          "default": "off",
+          "type": "string",
+          "enum": [
+            "off",
+            "low",
+            "medium"
+          ]
+        },
+        "frost": {
+          "default": 30,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "highlightThickness": {
+          "default": 1,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "lightDirection": {
+          "default": 135,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 360
+        },
+        "toolbarOpacity": {
+          "default": 85,
+          "type": "integer",
+          "minimum": 65,
+          "maximum": 100
+        },
+        "tabsOpacity": {
+          "default": 85,
+          "type": "integer",
+          "minimum": 65,
+          "maximum": 100
+        },
+        "sidebarOpacity": {
+          "default": 85,
+          "type": "integer",
+          "minimum": 65,
+          "maximum": 100
+        },
+        "panelOpacity": {
+          "default": 90,
+          "type": "integer",
+          "minimum": 65,
+          "maximum": 100
+        },
+        "widgetOpacity": {
+          "default": 85,
+          "type": "integer",
+          "minimum": 65,
+          "maximum": 100
+        },
+        "separateOpacity": {
+          "default": false,
+          "type": "boolean"
+        },
+        "tabPosition": {
+          "default": "inherit",
+          "type": "string",
+          "enum": [
+            "inherit",
+            "top",
+            "left",
+            "right",
+            "hidden",
+            "floating",
+            "auto"
+          ]
+        },
+        "verticalMode": {
+          "default": "full",
+          "type": "string",
+          "enum": [
+            "full",
+            "icons",
+            "hover"
+          ]
+        },
+        "sidebarMode": {
+          "default": "docked",
+          "type": "string",
+          "enum": [
+            "docked",
+            "floating",
+            "hidden",
+            "auto"
+          ]
+        },
+        "immersive": {
+          "default": false,
+          "type": "boolean"
+        },
+        "tabHeight": {
+          "default": 34,
+          "type": "integer",
+          "minimum": 28,
+          "maximum": 40
+        },
+        "tabPadding": {
+          "default": 8,
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 16
+        },
+        "tabIconSize": {
+          "default": 14,
+          "type": "integer",
+          "minimum": 12,
+          "maximum": 22
+        },
+        "tabBorder": {
+          "default": true,
+          "type": "boolean"
+        },
+        "tabShadow": {
+          "default": true,
+          "type": "boolean"
+        },
+        "tabAudio": {
+          "default": true,
+          "type": "boolean"
+        },
+        "tabContainer": {
+          "default": true,
+          "type": "boolean"
+        },
+        "tabCloseHidden": {
+          "default": false,
+          "type": "boolean"
+        },
+        "pinnedStyle": {
+          "default": "normal",
+          "type": "string",
+          "enum": [
+            "normal",
+            "circle",
+            "square"
+          ]
+        },
+        "groupStyle": {
+          "default": "normal",
+          "type": "string",
+          "enum": [
+            "normal",
+            "underline",
+            "subtle"
+          ]
+        },
+        "fontWeight": {
+          "default": 400,
+          "type": "integer",
+          "minimum": 400,
+          "maximum": 600
+        },
+        "letterSpacing": {
+          "default": 0,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "sidebarFont": {
+          "default": 12,
+          "type": "integer",
+          "minimum": 11,
+          "maximum": 17
+        },
+        "menuFont": {
+          "default": 12,
+          "type": "integer",
+          "minimum": 11,
+          "maximum": 17
+        },
+        "motionDuration": {
+          "default": 180,
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 400
+        },
+        "spring": {
+          "default": 20,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "workspaceTransition": {
+          "default": "none",
+          "type": "string",
+          "enum": [
+            "none",
+            "fade",
+            "slide"
+          ]
+        },
+        "dashboard": {
+          "default": false,
+          "type": "boolean"
+        },
+        "gridColumns": {
+          "default": 2,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "freeLayout": {
+          "default": false,
+          "type": "boolean"
+        },
+        "dynamicWidgets": {
+          "default": true,
+          "type": "boolean"
+        },
+        "widgets": {
+          "default": [],
+          "maxItems": 24,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "clock",
+                  "date",
+                  "calendar",
+                  "timer",
+                  "calculator",
+                  "notes",
+                  "reading",
+                  "bookmarks",
+                  "history",
+                  "downloads",
+                  "workspaces",
+                  "tasks",
+                  "system",
+                  "media",
+                  "quicklinks"
+                ]
+              },
+              "zone": {
+                "type": "string",
+                "enum": [
+                  "start",
+                  "sidebar",
+                  "floating"
+                ]
+              },
+              "size": {
+                "type": "string",
+                "enum": [
+                  "small",
+                  "medium",
+                  "large",
+                  "icon"
+                ]
+              },
+              "x": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 90
+              },
+              "y": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2000
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "zone",
+              "size",
+              "x",
+              "y"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "toolbarZones": {
+          "default": false,
+          "type": "boolean"
+        },
+        "widgetZones": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "enum": [
+              "back",
+              "forward",
+              "reload",
+              "home",
+              "address",
+              "workspace",
+              "tabs",
+              "split",
+              "downloads",
+              "history",
+              "notes",
+              "reading",
+              "privacy",
+              "screenshot",
+              "developer",
+              "extensions",
+              "settings",
+              "separator",
+              "spacer",
+              "menu"
+            ]
+          },
+          "additionalProperties": {
+            "type": "string",
+            "enum": [
+              "left",
+              "center",
+              "right"
+            ]
+          }
+        },
+        "interfaceStyle": {
+          "default": "modern",
+          "type": "string",
+          "enum": [
+            "modern",
+            "classic"
+          ]
+        },
+        "palette": {
+          "default": "inherit",
+          "type": "string",
+          "enum": [
+            "inherit",
+            "graphite",
+            "midnight",
+            "paper"
+          ]
+        },
+        "wallpaperEverywhere": {
+          "default": false,
+          "type": "boolean"
+        },
+        "background": {
+          "default": "existing",
+          "type": "string",
+          "enum": [
+            "existing",
+            "solid",
+            "gradient"
+          ]
+        },
+        "backgroundColor": {
+          "default": "#23302e",
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "gradientColor": {
+          "default": "#536a72",
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "imageFit": {
+          "default": "cover",
+          "type": "string",
+          "enum": [
+            "cover",
+            "contain",
+            "stretch",
+            "center",
+            "tile"
+          ]
+        },
+        "imageX": {
+          "default": 50,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "imageY": {
+          "default": 50,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "imageScale": {
+          "default": 100,
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 150
+        },
+        "brightness": {
+          "default": 100,
+          "type": "integer",
+          "minimum": 50,
+          "maximum": 150
+        },
+        "saturation": {
+          "default": 100,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 150
+        },
+        "contrast": {
+          "default": 100,
+          "type": "integer",
+          "minimum": 50,
+          "maximum": 150
+        },
+        "glass": {
+          "default": false,
+          "type": "boolean"
+        },
+        "glassOpacity": {
+          "default": 85,
+          "type": "integer",
+          "minimum": 65,
+          "maximum": 100
+        },
+        "glassTint": {
+          "default": "#71877f",
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "toolbarBlur": {
+          "default": 16,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 50
+        },
+        "sidebarBlur": {
+          "default": 12,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 50
+        },
+        "tabBlur": {
+          "default": 6,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 50
+        },
+        "panelBlur": {
+          "default": 12,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 50
+        },
+        "widgetBlur": {
+          "default": 8,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 50
+        },
+        "quality": {
+          "default": "balanced",
+          "type": "string",
+          "enum": [
+            "performance",
+            "balanced",
+            "maximum"
+          ]
+        },
+        "highlight": {
+          "default": 12,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "shadow": {
+          "default": "soft",
+          "type": "string",
+          "enum": [
+            "none",
+            "minimal",
+            "soft",
+            "deep"
+          ]
+        },
+        "radius": {
+          "default": 10,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 24
+        },
+        "font": {
+          "default": "system",
+          "type": "string",
+          "enum": [
+            "system",
+            "humanist",
+            "mono"
+          ]
+        },
+        "fontSize": {
+          "default": 12,
+          "type": "integer",
+          "minimum": 11,
+          "maximum": 15
+        },
+        "spacing": {
+          "default": "balanced",
+          "type": "string",
+          "enum": [
+            "compact",
+            "balanced",
+            "comfortable"
+          ]
+        },
+        "toolbarHeight": {
+          "default": 56,
+          "type": "integer",
+          "minimum": 48,
+          "maximum": 72
+        },
+        "sidebarWidth": {
+          "default": 240,
+          "type": "integer",
+          "minimum": 200,
+          "maximum": 320
+        },
+        "sidebarSide": {
+          "default": "left",
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ]
+        },
+        "addressMode": {
+          "default": "full",
+          "type": "string",
+          "enum": [
+            "full",
+            "centered",
+            "compact",
+            "expand"
+          ]
+        },
+        "addressWidth": {
+          "default": 600,
+          "type": "integer",
+          "minimum": 240,
+          "maximum": 1000
+        },
+        "addressRadius": {
+          "default": 7,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 28
+        },
+        "addressFont": {
+          "default": 12,
+          "type": "integer",
+          "minimum": 11,
+          "maximum": 17
+        },
+        "searchStyle": {
+          "default": "classic",
+          "type": "string",
+          "enum": [
+            "classic",
+            "soft",
+            "glass",
+            "minimal"
+          ]
+        },
+        "searchTint": {
+          "default": "#8ba9c4",
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "searchOpacity": {
+          "default": 90,
+          "type": "integer",
+          "minimum": 65,
+          "maximum": 100
+        },
+        "searchBorder": {
+          "default": 1,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "searchShadow": {
+          "default": "soft",
+          "type": "string",
+          "enum": [
+            "none",
+            "soft",
+            "lifted"
+          ]
+        },
+        "searchNewTab": {
+          "default": true,
+          "type": "boolean"
+        },
+        "tabRadius": {
+          "default": 10,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 24
+        },
+        "tabGap": {
+          "default": 5,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 12
+        },
+        "tabTitles": {
+          "default": true,
+          "type": "boolean"
+        },
+        "cleanStart": {
+          "default": false,
+          "type": "boolean"
+        },
+        "toolbar": {
+          "default": [
+            "back",
+            "forward",
+            "reload",
+            "home",
+            "address",
+            "workspace",
+            "tabs",
+            "split",
+            "downloads",
+            "menu"
+          ],
+          "minItems": 2,
+          "maxItems": 20,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "back",
+              "forward",
+              "reload",
+              "home",
+              "address",
+              "workspace",
+              "tabs",
+              "split",
+              "downloads",
+              "history",
+              "notes",
+              "reading",
+              "privacy",
+              "screenshot",
+              "developer",
+              "extensions",
+              "settings",
+              "separator",
+              "spacer",
+              "menu"
+            ]
+          },
+          "uniqueItems": true,
+          "allOf": [
+            {
+              "contains": {
+                "const": "address"
+              }
+            },
+            {
+              "contains": {
+                "const": "menu"
+              }
+            }
+          ]
+        }
+      },
+      "required": [
+        "wallpaperMode",
+        "wallpaperSlot",
+        "rotationMinutes",
+        "dayDim",
+        "nightDim",
+        "scheduledDim",
+        "adaptiveColors",
+        "adaptiveTime",
+        "autoPerformance",
+        "parallax",
+        "noise",
+        "refraction",
+        "frost",
+        "highlightThickness",
+        "lightDirection",
+        "toolbarOpacity",
+        "tabsOpacity",
+        "sidebarOpacity",
+        "panelOpacity",
+        "widgetOpacity",
+        "separateOpacity",
+        "tabPosition",
+        "verticalMode",
+        "sidebarMode",
+        "immersive",
+        "tabHeight",
+        "tabPadding",
+        "tabIconSize",
+        "tabBorder",
+        "tabShadow",
+        "tabAudio",
+        "tabContainer",
+        "tabCloseHidden",
+        "pinnedStyle",
+        "groupStyle",
+        "fontWeight",
+        "letterSpacing",
+        "sidebarFont",
+        "menuFont",
+        "motionDuration",
+        "spring",
+        "workspaceTransition",
+        "dashboard",
+        "gridColumns",
+        "freeLayout",
+        "dynamicWidgets",
+        "widgets",
+        "toolbarZones",
+        "widgetZones",
+        "interfaceStyle",
+        "palette",
+        "wallpaperEverywhere",
+        "background",
+        "backgroundColor",
+        "gradientColor",
+        "imageFit",
+        "imageX",
+        "imageY",
+        "imageScale",
+        "brightness",
+        "saturation",
+        "contrast",
+        "glass",
+        "glassOpacity",
+        "glassTint",
+        "toolbarBlur",
+        "sidebarBlur",
+        "tabBlur",
+        "panelBlur",
+        "widgetBlur",
+        "quality",
+        "highlight",
+        "shadow",
+        "radius",
+        "font",
+        "fontSize",
+        "spacing",
+        "toolbarHeight",
+        "sidebarWidth",
+        "sidebarSide",
+        "addressMode",
+        "addressWidth",
+        "addressRadius",
+        "addressFont",
+        "searchStyle",
+        "searchTint",
+        "searchOpacity",
+        "searchBorder",
+        "searchShadow",
+        "searchNewTab",
+        "tabRadius",
+        "tabGap",
+        "tabTitles",
+        "cleanStart",
+        "toolbar"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "version",
+    "name",
+    "visual",
+    "studio"
+  ],
+  "additionalProperties": false,
+  "title": "Aster Theme Package v1"
+}
